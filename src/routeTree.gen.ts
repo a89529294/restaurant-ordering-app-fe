@@ -17,7 +17,8 @@ import { Route as DashboardRouteImport } from './routes/dashboard/route'
 import { Route as IndexImport } from './routes/index'
 import { Route as DashboardIndexImport } from './routes/dashboard/index'
 import { Route as DashboardSettingsImport } from './routes/dashboard/settings'
-import { Route as DashboardCreateTableImport } from './routes/dashboard/create-table'
+import { Route as DashboardTablesCreateImport } from './routes/dashboard/tables/create'
+import { Route as DashboardTablesTableIdIndexImport } from './routes/dashboard/tables/$tableId/index'
 
 // Create/Update Routes
 
@@ -57,11 +58,18 @@ const DashboardSettingsRoute = DashboardSettingsImport.update({
   getParentRoute: () => DashboardRouteRoute,
 } as any)
 
-const DashboardCreateTableRoute = DashboardCreateTableImport.update({
-  id: '/create-table',
-  path: '/create-table',
+const DashboardTablesCreateRoute = DashboardTablesCreateImport.update({
+  id: '/tables/create',
+  path: '/tables/create',
   getParentRoute: () => DashboardRouteRoute,
 } as any)
+
+const DashboardTablesTableIdIndexRoute =
+  DashboardTablesTableIdIndexImport.update({
+    id: '/tables/$tableId/',
+    path: '/tables/$tableId/',
+    getParentRoute: () => DashboardRouteRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -95,13 +103,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignupImport
       parentRoute: typeof rootRoute
     }
-    '/dashboard/create-table': {
-      id: '/dashboard/create-table'
-      path: '/create-table'
-      fullPath: '/dashboard/create-table'
-      preLoaderRoute: typeof DashboardCreateTableImport
-      parentRoute: typeof DashboardRouteImport
-    }
     '/dashboard/settings': {
       id: '/dashboard/settings'
       path: '/settings'
@@ -116,21 +117,37 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardIndexImport
       parentRoute: typeof DashboardRouteImport
     }
+    '/dashboard/tables/create': {
+      id: '/dashboard/tables/create'
+      path: '/tables/create'
+      fullPath: '/dashboard/tables/create'
+      preLoaderRoute: typeof DashboardTablesCreateImport
+      parentRoute: typeof DashboardRouteImport
+    }
+    '/dashboard/tables/$tableId/': {
+      id: '/dashboard/tables/$tableId/'
+      path: '/tables/$tableId'
+      fullPath: '/dashboard/tables/$tableId'
+      preLoaderRoute: typeof DashboardTablesTableIdIndexImport
+      parentRoute: typeof DashboardRouteImport
+    }
   }
 }
 
 // Create and export the route tree
 
 interface DashboardRouteRouteChildren {
-  DashboardCreateTableRoute: typeof DashboardCreateTableRoute
   DashboardSettingsRoute: typeof DashboardSettingsRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
+  DashboardTablesCreateRoute: typeof DashboardTablesCreateRoute
+  DashboardTablesTableIdIndexRoute: typeof DashboardTablesTableIdIndexRoute
 }
 
 const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
-  DashboardCreateTableRoute: DashboardCreateTableRoute,
   DashboardSettingsRoute: DashboardSettingsRoute,
   DashboardIndexRoute: DashboardIndexRoute,
+  DashboardTablesCreateRoute: DashboardTablesCreateRoute,
+  DashboardTablesTableIdIndexRoute: DashboardTablesTableIdIndexRoute,
 }
 
 const DashboardRouteRouteWithChildren = DashboardRouteRoute._addFileChildren(
@@ -142,18 +159,20 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRouteRouteWithChildren
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
-  '/dashboard/create-table': typeof DashboardCreateTableRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/dashboard/tables/create': typeof DashboardTablesCreateRoute
+  '/dashboard/tables/$tableId': typeof DashboardTablesTableIdIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
-  '/dashboard/create-table': typeof DashboardCreateTableRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard': typeof DashboardIndexRoute
+  '/dashboard/tables/create': typeof DashboardTablesCreateRoute
+  '/dashboard/tables/$tableId': typeof DashboardTablesTableIdIndexRoute
 }
 
 export interface FileRoutesById {
@@ -162,9 +181,10 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRouteRouteWithChildren
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
-  '/dashboard/create-table': typeof DashboardCreateTableRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/dashboard/tables/create': typeof DashboardTablesCreateRoute
+  '/dashboard/tables/$tableId/': typeof DashboardTablesTableIdIndexRoute
 }
 
 export interface FileRouteTypes {
@@ -174,26 +194,29 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/login'
     | '/signup'
-    | '/dashboard/create-table'
     | '/dashboard/settings'
     | '/dashboard/'
+    | '/dashboard/tables/create'
+    | '/dashboard/tables/$tableId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/login'
     | '/signup'
-    | '/dashboard/create-table'
     | '/dashboard/settings'
     | '/dashboard'
+    | '/dashboard/tables/create'
+    | '/dashboard/tables/$tableId'
   id:
     | '__root__'
     | '/'
     | '/dashboard'
     | '/login'
     | '/signup'
-    | '/dashboard/create-table'
     | '/dashboard/settings'
     | '/dashboard/'
+    | '/dashboard/tables/create'
+    | '/dashboard/tables/$tableId/'
   fileRoutesById: FileRoutesById
 }
 
@@ -233,9 +256,10 @@ export const routeTree = rootRoute
     "/dashboard": {
       "filePath": "dashboard/route.tsx",
       "children": [
-        "/dashboard/create-table",
         "/dashboard/settings",
-        "/dashboard/"
+        "/dashboard/",
+        "/dashboard/tables/create",
+        "/dashboard/tables/$tableId/"
       ]
     },
     "/login": {
@@ -244,16 +268,20 @@ export const routeTree = rootRoute
     "/signup": {
       "filePath": "signup.tsx"
     },
-    "/dashboard/create-table": {
-      "filePath": "dashboard/create-table.tsx",
-      "parent": "/dashboard"
-    },
     "/dashboard/settings": {
       "filePath": "dashboard/settings.tsx",
       "parent": "/dashboard"
     },
     "/dashboard/": {
       "filePath": "dashboard/index.tsx",
+      "parent": "/dashboard"
+    },
+    "/dashboard/tables/create": {
+      "filePath": "dashboard/tables/create.tsx",
+      "parent": "/dashboard"
+    },
+    "/dashboard/tables/$tableId/": {
+      "filePath": "dashboard/tables/$tableId/index.tsx",
       "parent": "/dashboard"
     }
   }

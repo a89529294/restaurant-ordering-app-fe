@@ -1,1 +1,2 @@
-1. When I ask you to create UI, if I did not specify, use shadcnui.
+1. When I ask you to create UI, if I did not specify, use shadcnui. 
+2. If you need shadcnui components just ask to download. The syntax looks like this `pnpm dlx shadcn@latest add component_name`
